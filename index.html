@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Munich Collective — Concept</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15140f;
+    --charcoal:#2b2820;
+    --paper:#f8f1de;
+    --paper-2:#f1e7c9;
+    --honey:#f3b400;
+    --honey-deep:#c98a00;
+    --line:#e2d5a8;
+    --white:#fffdf6;
+    --radius-hex: 4px 22px 4px 22px;
+    --maxw: 480px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#1b1a14;
+      --paper-2:#232016;
+      --ink:#f8f1de;
+      --charcoal:#e7ddc0;
+      --line:#3a3626;
+      --white:#221f16;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1b1a14;
+    --paper-2:#232016;
+    --ink:#f8f1de;
+    --charcoal:#e7ddc0;
+    --line:#3a3626;
+    --white:#221f16;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;overflow-x:hidden;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:900;
+    line-height:0.92;
+    letter-spacing:0.2px;
+    margin:0;
+    color:var(--ink);
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px;}
+  .section{padding:64px 0;}
+  @media(min-width:860px){.section{padding:96px 0;}}
+
+  /* ---------- honeycomb divider ---------- */
+  .comb{
+    height:22px;
+    width:100%;
+    background:
+      linear-gradient(135deg, var(--paper) 25%, transparent 25.5%) 0 0,
+      linear-gradient(-135deg, var(--paper) 25%, transparent 25.5%) 0 0;
+    background-size: 24px 22px;
+    background-color: var(--honey);
+  }
+  .comb.flip{transform:scaleY(-1);}
+  .comb.dark{background-color:var(--ink);}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .navbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px;
+    max-width:1080px; margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .hex{
+    width:34px; height:34px;
+    background:var(--honey);
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+    position:relative; flex:none;
+  }
+  .hex::after{
+    content:"";
+    position:absolute; inset:8px;
+    background:var(--ink);
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+  }
+  .brand-name{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800; font-size:19px; letter-spacing:0.3px;
+  }
+  nav.links{display:none; gap:26px; font-weight:600; font-size:15px;}
+  @media(min-width:860px){nav.links{display:flex;}}
+  .nav-cta{
+    display:none;
+    background:var(--ink); color:var(--paper);
+    padding:10px 18px;
+    font-weight:700; font-size:14px;
+    border-radius:var(--radius-hex);
+  }
+  @media(min-width:860px){.nav-cta{display:inline-block;}}
+  .account-link{font-size:13px; font-weight:600; opacity:0.75; display:none;}
+  @media(min-width:860px){.account-link{display:inline-block; margin-right:18px;}}
+  .burger{
+    display:flex; flex-direction:column; gap:5px;
+    background:none; border:none; cursor:pointer; padding:6px;
+  }
+  @media(min-width:860px){.burger{display:none;}}
+  .burger span{width:24px; height:2.5px; background:var(--ink); display:block;}
+  #mobile-menu{
+    display:none; flex-direction:column;
+    border-top:1px solid var(--line);
+    background:var(--paper);
+  }
+  #mobile-menu.open{display:flex;}
+  #mobile-menu a{
+    padding:14px 20px; font-weight:600; border-bottom:1px solid var(--line);
+  }
+  #mobile-menu .acct{opacity:0.7; font-size:14px;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:52px 0 0 0;
+    position:relative;
+  }
+  .hero .wrap{
+    display:flex; flex-direction:column; gap:28px;
+  }
+  @media(min-width:860px){
+    .hero .wrap{flex-direction:row; align-items:center; gap:50px; padding-bottom:40px;}
+    .hero-copy{flex:1.1;}
+    .hero-visual{flex:1;}
+  }
+  .kicker{
+    font-weight:700; font-size:14px; color:var(--honey-deep);
+    margin-bottom:10px;
+  }
+  .hero h1{
+    font-size:clamp(46px, 12vw, 92px);
+    text-transform:uppercase;
+  }
+  .hero p.lede{
+    font-size:17px; max-width:46ch; margin-top:18px; color:var(--charcoal);
+  }
+  .hero-actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px;}
+  .btn{
+    display:inline-block; padding:14px 24px;
+    font-weight:700; font-size:15px;
+    border-radius:var(--radius-hex);
+    border:2px solid var(--ink);
+  }
+  .btn.solid{background:var(--ink); color:var(--paper);}
+  .btn.outline{background:transparent; color:var(--ink);}
+  .hero-visual{
+    aspect-ratio:4/3; background:
+      repeating-linear-gradient(135deg, var(--ink) 0 18px, var(--honey) 18px 36px);
+    clip-path: polygon(6% 0, 100% 0, 100% 88%, 94% 100%, 0 100%, 0 12%);
+    position:relative;
+  }
+  .hero-visual::after{
+    content:"studio photo — placeholder";
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(21,20,15,0.55); color:var(--paper); font-size:13px; font-weight:600; text-align:center; padding:20px;
+  }
+  .stat-strip{
+    display:flex; gap:0; margin-top:44px; border-top:1px solid var(--line);
+  }
+  .stat{flex:1; padding:18px 4px 0; border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Big Shoulders Display'; font-weight:900; font-size:clamp(26px,6vw,40px);}
+  .stat .lab{font-size:12.5px; color:var(--charcoal); margin-top:2px;}
+
+  /* ---------- section heads ---------- */
+  .head{margin-bottom:34px; max-width:60ch;}
+  .head h2{font-size:clamp(32px,7vw,52px); text-transform:uppercase;}
+  .head p{margin-top:10px; color:var(--charcoal); font-size:15.5px;}
+
+  /* ---------- reviews (dark) ---------- */
+  .reviews{background:var(--ink); color:var(--paper);}
+  .reviews .head h2, .reviews .head p{color:var(--paper);}
+  .reviews .head p{opacity:0.75;}
+  .badge-line{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .stars{color:var(--honey); font-size:16px; letter-spacing:2px;}
+  .review-scroll{
+    display:flex; gap:16px; overflow-x:auto; padding-bottom:8px;
+    scroll-snap-type:x mandatory; margin:0 -20px; padding-left:20px; padding-right:20px;
+  }
+  .review-card{
+    scroll-snap-align:start;
+    flex:0 0 82%; max-width:340px;
+    background:var(--charcoal);
+    padding:26px 22px;
+    border-radius:var(--radius-hex);
+  }
+  @media(min-width:860px){.review-card{flex:0 0 32%;}}
+  .review-card q{font-size:15px; color:var(--paper); display:block; margin-bottom:14px;}
+  .review-who{font-size:13px; font-weight:700; color:var(--honey);}
+  .aggregators{
+    margin-top:44px; padding-top:28px; border-top:1px solid rgba(248,241,222,0.15);
+  }
+  .aggregators .lab{font-size:13px; opacity:0.65; margin-bottom:14px;}
+  .agg-badges{display:flex; flex-wrap:wrap; gap:10px;}
+  .agg-badges span{
+    border:1px solid rgba(248,241,222,0.3); padding:8px 14px;
+    font-size:13px; font-weight:600; border-radius:20px;
+  }
+
+  /* ---------- classes / schedule ---------- */
+  .class-grid{display:grid; grid-template-columns:1fr; gap:14px;}
+  @media(min-width:640px){.class-grid{grid-template-columns:1fr 1fr;}}
+  @media(min-width:860px){.class-grid{grid-template-columns:repeat(3,1fr);}}
+  .class-card{
+    background:var(--white); border:1px solid var(--line);
+    padding:22px; border-radius:var(--radius-hex);
+  }
+  .class-card h3{font-size:22px; text-transform:uppercase;}
+  .class-card p{font-size:14px; color:var(--charcoal); margin-top:8px;}
+  .schedule-embed{
+    margin-top:30px;
+    border:2px dashed var(--line);
+    border-radius:var(--radius-hex);
+    padding:44px 22px;
+    text-align:center;
+  }
+  .schedule-embed .tag{
+    display:inline-block; background:var(--honey); color:var(--ink);
+    padding:5px 12px; font-weight:700; font-size:12.5px; border-radius:20px; margin-bottom:12px;
+  }
+  .schedule-embed h3{font-size:22px;}
+  .schedule-embed p{color:var(--charcoal); font-size:14.5px; max-width:46ch; margin:10px auto 0;}
+
+  /* ---------- app highlight ---------- */
+  .app-section{background:var(--paper-2);}
+  .app-flex{display:flex; flex-direction:column; gap:40px; align-items:center;}
+  @media(min-width:860px){.app-flex{flex-direction:row;}}
+  .phones{display:flex; gap:14px; flex:1; justify-content:center;}
+  .phone{
+    width:130px; height:270px; background:var(--ink);
+    border-radius:26px; padding:8px; flex:none;
+    box-shadow:0 18px 30px -12px rgba(21,20,15,0.35);
+  }
+  .phone:nth-child(2){margin-top:-24px; width:150px; height:310px;}
+  .phone-screen{
+    width:100%; height:100%; border-radius:18px;
+    background:repeating-linear-gradient(0deg, var(--honey) 0 6px, var(--paper) 6px 12px);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .phone-screen span{
+    background:rgba(21,20,15,0.7); color:var(--paper);
+    font-size:10.5px; font-weight:700; padding:6px 8px; border-radius:6px;
+    text-align:center;
+  }
+  .app-copy{flex:1;}
+  .app-copy ul{list-style:none; margin:22px 0 0; padding:0; display:flex; flex-direction:column; gap:14px;}
+  .app-copy li{
+    display:flex; gap:12px; align-items:flex-start; font-size:15px; color:var(--charcoal);
+  }
+  .app-copy li .mark{
+    width:8px; height:8px; background:var(--honey-deep); flex:none; margin-top:7px;
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+  }
+
+  /* ---------- team ---------- */
+  .team-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+  @media(min-width:640px){.team-grid{grid-template-columns:repeat(4,1fr);}}
+  .team-card .avatar{
+    aspect-ratio:1; background:linear-gradient(160deg,var(--paper-2),var(--line));
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:var(--charcoal); font-weight:600; text-align:center;
+  }
+  .team-card h3{font-size:17px; margin-top:12px; text-transform:none;}
+  .team-card p{font-size:13px; color:var(--charcoal); margin-top:2px;}
+
+  /* ---------- pricing ---------- */
+  .price-table{border-top:1px solid var(--line);}
+  .price-row{
+    display:flex; justify-content:space-between; gap:16px;
+    padding:16px 0; border-bottom:1px solid var(--line);
+    font-size:15.5px;
+  }
+  .price-row .amt{font-weight:700; font-family:'Big Shoulders Display'; font-size:19px;}
+  .price-note{margin-top:22px; font-size:13.5px; color:var(--charcoal);}
+  .rent-block{
+    margin-top:56px; padding-top:44px; border-top:1px solid var(--line);
+    display:flex; flex-direction:column; gap:24px;
+  }
+  @media(min-width:860px){.rent-block{flex-direction:row; align-items:flex-start;}}
+  .rent-gallery{display:flex; gap:8px; flex:1;}
+  .rent-gallery div{
+    flex:1; aspect-ratio:3/4; background:var(--paper-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:10.5px; color:var(--charcoal); text-align:center; padding:6px;
+  }
+  .rent-copy{flex:1;}
+
+  /* ---------- news ---------- */
+  .news-list{display:flex; flex-direction:column; gap:0;}
+  .news-item{
+    padding:22px 0; border-bottom:1px solid var(--line);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .news-item .date{font-size:12.5px; color:var(--honey-deep); font-weight:700;}
+  .news-item h3{font-size:20px; text-transform:none; font-weight:800;}
+  .news-item p{font-size:14.5px; color:var(--charcoal);}
+  .news-admin-note{
+    margin-top:22px; padding:16px 18px; background:var(--paper-2);
+    border-radius:var(--radius-hex); font-size:13.5px; color:var(--charcoal);
+  }
+
+  /* ---------- contact ---------- */
+  .contact-flex{display:flex; flex-direction:column; gap:30px;}
+  @media(min-width:860px){.contact-flex{flex-direction:row;}}
+  .map-box{
+    flex:1; aspect-ratio:4/3; background:var(--paper-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--charcoal); text-align:center; padding:20px;
+  }
+  .contact-info{flex:1;}
+  .contact-info .row{margin-bottom:14px; font-size:15.5px;}
+  .contact-info .row span{display:block; font-size:12.5px; color:var(--honey-deep); font-weight:700; margin-bottom:2px;}
+
+  footer{background:var(--ink); color:var(--paper); padding:44px 0 100px;}
+  @media(min-width:860px){footer{padding:44px 0;}}
+  .foot-flex{display:flex; flex-direction:column; gap:18px; font-size:13.5px; opacity:0.75;}
+  @media(min-width:860px){.foot-flex{flex-direction:row; justify-content:space-between;}}
+  .foot-links{display:flex; gap:16px;}
+
+  /* ---------- sticky mobile CTA ---------- */
+  .sticky-cta{
+    position:fixed; bottom:0; left:0; right:0; z-index:60;
+    background:var(--honey); padding:12px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    box-shadow:0 -6px 18px rgba(21,20,15,0.15);
+  }
+  @media(min-width:860px){.sticky-cta{display:none;}}
+  .sticky-cta span{font-weight:700; font-size:14px; color:var(--ink);}
+  .sticky-cta a{
+    background:var(--ink); color:var(--honey); padding:10px 18px;
+    font-weight:700; font-size:13.5px; border-radius:var(--radius-hex);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="navbar">
+    <a href="#top" class="brand">
+      <div class="hex"></div>
+      <div class="brand-name">The&nbsp;Munich<br>Collective</div>
+    </a>
+    <nav class="links">
+      <a href="#classes">Classes</a>
+      <a href="#app">App</a>
+      <a href="#team">Team</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#rent">Rent&nbsp;Studio</a>
+      <a href="#news">News</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div style="display:flex; align-items:center;">
+      <a href="#" class="account-link" title="Placeholder — likely a Notion form embed">Log in / Sign up</a>
+      <a href="#" class="nav-cta">Book a class</a>
+      <button class="burger" id="burgerBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu">
+    <a href="#classes">Classes</a>
+    <a href="#app">App</a>
+    <a href="#team">Team</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#rent">Rent Studio</a>
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+    <a href="#" class="acct">Log in / Sign up (placeholder)</a>
+  </div>
+</header>
+
+<div id="top"></div>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="kicker">Belgradstrasse 66, Munich</div>
+      <h1>A room<br>with<br>potential.</h1>
+      <p class="lede">Eight years of Pilates, barre and community in Munich's Schwabing-Freimann. One studio, one collective, run by people who show up.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn solid">Book a class</a>
+        <a href="#classes" class="btn outline">See classes</a>
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><div class="num">8</div><div class="lab">years in studio</div></div>
+        <div class="stat"><div class="num">4</div><div class="lab">aggregator partners</div></div>
+        <div class="stat"><div class="num">1</div><div class="lab">hive, many bees</div></div>
+      </div>
+    </div>
+    <div class="hero-visual"></div>
+  </div>
+</section>
+
+<div class="comb"></div>
+
+<section class="reviews section" id="reviews">
+  <div class="wrap">
+    <div class="head">
+      <h2>What the hive is saying</h2>
+      <p>Real words from real members. Swap in Google / Classpass reviews here once we've pulled the latest batch.</p>
+    </div>
+    <div class="review-scroll">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>Best studio in Munich — the instructors actually remember your name and your bad knee.</q>
+        <div class="review-who">— placeholder review</div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>Small classes, real attention. I've tried every studio in the city and keep coming back here.</q>
+        <div class="review-who">— placeholder review</div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>Booking through the app takes ten seconds. Wish every studio made it this easy.</q>
+        <div class="review-who">— placeholder review</div>
+      </div>
+    </div>
+    <div class="aggregators">
+      <div class="lab">Book us directly, or through</div>
+      <div class="agg-badges">
+        <span>Urban Sports Club</span>
+        <span>Egym / Wellpass</span>
+        <span>Wellhub</span>
+        <span>Classpass</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="comb flip dark"></div>
+
+<section class="section" id="classes">
+  <div class="wrap">
+    <div class="head">
+      <h2>Find your class</h2>
+      <p>Pilates, barre and more — small groups, real instruction.</p>
+    </div>
+    <div class="class-grid">
+      <div class="class-card"><h3>Mat Pilates</h3><p>Full-body, low-impact strength work. All levels welcome.</p></div>
+      <div class="class-card"><h3>Reformer</h3><p>Machine-based Pilates for control, stability and tone.</p></div>
+      <div class="class-card"><h3>Barre</h3><p>Fifty minutes of small, precise, burn-it-out movements.</p></div>
+    </div>
+    <div class="schedule-embed">
+      <div class="tag">bsport widget — placeholder</div>
+      <h3>Live schedule loads here</h3>
+      <p>This block will hold the embedded bsport calendar once the studio shares their widget code — live availability, direct booking, no separate app needed.</p>
+    </div>
+  </div>
+</section>
+
+<section class="app-section section" id="app">
+  <div class="wrap app-flex">
+    <div class="phones">
+      <div class="phone"><div class="phone-screen"><span>app<br>screenshot</span></div></div>
+      <div class="phone"><div class="phone-screen"><span>app<br>screenshot</span></div></div>
+    </div>
+    <div class="app-copy">
+      <div class="head" style="margin-bottom:0;">
+        <h2>Run your membership<br>from your pocket</h2>
+      </div>
+      <ul>
+        <li><span class="mark"></span>Book, cancel and waitlist classes in seconds</li>
+        <li><span class="mark"></span>Buy class packs, memberships and gift certificates</li>
+        <li><span class="mark"></span>See your history and upcoming bookings at a glance</li>
+      </ul>
+      <div style="margin-top:26px;"><a href="#" class="btn solid">Get the app</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="comb"></div>
+
+<section class="section" id="team">
+  <div class="wrap">
+    <div class="head">
+      <h2>Meet the collective</h2>
+      <p>The instructors behind the classes.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card"><div class="avatar">photo</div><h3>Melissa</h3><p>Founder & instructor</p></div>
+      <div class="team-card"><div class="avatar">photo</div><h3>Instructor name</h3><p>Pilates & barre</p></div>
+      <div class="team-card"><div class="avatar">photo</div><h3>Instructor name</h3><p>Reformer</p></div>
+      <div class="team-card"><div class="avatar">photo</div><h3>Instructor name</h3><p>Barre</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="head">
+      <h2>Pricing</h2>
+      <p>Pulled from the current price list — swap in updates any time.</p>
+    </div>
+    <div class="price-table">
+      <div class="price-row"><span>First-time class</span><span class="amt">15€</span></div>
+      <div class="price-row"><span>Single class</span><span class="amt">20€</span></div>
+      <div class="price-row"><span>3er card</span><span class="amt">57€</span></div>
+      <div class="price-row"><span>5er card</span><span class="amt">90€</span></div>
+      <div class="price-row"><span>10er card</span><span class="amt">170€</span></div>
+      <div class="price-row"><span>20er card</span><span class="amt">300€</span></div>
+      <div class="price-row"><span>Barre pack (5 classes)</span><span class="amt">75€</span></div>
+      <div class="price-row"><span>Monthly membership (8 classes)</span><span class="amt">100€</span></div>
+    </div>
+    <p class="price-note">Gift certificates are available through the app or bsport — get in touch if you don't see the amount you're after.</p>
+
+    <div class="rent-block" id="rent">
+      <div class="rent-gallery">
+        <div>studio photo</div>
+        <div>studio photo</div>
+        <div>studio photo</div>
+      </div>
+      <div class="rent-copy">
+        <h3 style="font-size:26px; text-transform:uppercase;">Rent the studio</h3>
+        <p style="color:var(--charcoal); margin-top:10px; font-size:15px;">Rates start from 29.41€/hour (plus tax, deductible for businesses). Weekend rates for a full day or full weekend. One-time and recurring contracts available.</p>
+        <a href="#contact" class="btn outline" style="margin-top:16px;">Get a quote</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="news">
+  <div class="wrap">
+    <div class="head">
+      <h2>News</h2>
+      <p>Studio updates — not the front page anymore, but easy to find.</p>
+    </div>
+    <div class="news-list">
+      <div class="news-item">
+        <div class="date">Placeholder date</div>
+        <h3>Closing for renovations</h3>
+        <p>We're closing for a short renovation window, resuming classes right after. Details go here.</p>
+      </div>
+      <div class="news-item">
+        <div class="date">Placeholder date</div>
+        <h3>New instructors joining the collective</h3>
+        <p>A short note on new classes and new faces this quarter.</p>
+      </div>
+    </div>
+    <div class="news-admin-note">
+      Placeholder for now. Once live, Melissa should be able to add, edit or remove a news post herself — see the note on content management below the fold of this proposal.
+    </div>
+  </div>
+</section>
+
+<div class="comb flip dark"></div>
+
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="head">
+      <h2>Find us</h2>
+    </div>
+    <div class="contact-flex">
+      <div class="map-box">map embed — placeholder</div>
+      <div class="contact-info">
+        <div class="row"><span>Address</span>Belgradstrasse 66, 80804 München</div>
+        <div class="row"><span>Contact</span>Melissa Ryzek — +49 (0)160 9090 9125</div>
+        <div class="row"><span>Email</span>home@themunichcollective.de</div>
+        <a href="#" class="btn solid" style="margin-top:6px;">Book a class</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-flex">
+    <div>© The Munich Collective — Belgradstrasse 66, München</div>
+    <div class="foot-links">
+      <a href="#">Instagram</a>
+      <a href="#">Log in / Sign up</a>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta">
+  <span>Ready to move?</span>
+  <a href="#">Book a class</a>
+</div>
+
+<script>
+  const burger = document.getElementById('burgerBtn');
+  const menu = document.getElementById('mobile-menu');
+  burger.addEventListener('click', () => menu.classList.toggle('open'));
+  document.querySelectorAll('#mobile-menu a').forEach(a=>{
+    a.addEventListener('click', ()=> menu.classList.remove('open'));
+  });
+  document.documentElement.style.scrollBehavior = 'smooth';
+</script>
+
+</body>
+</html>
