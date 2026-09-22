@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <style>
   :root{
     --ink:#15140f;
@@ -40,10 +40,7 @@
     --white:#221f16;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  /* overflow-x is clipped here, not on html/body — html/body need overflow:visible
-     for header's position:sticky to work on iOS Safari. */
-  #page{overflow-x:hidden; width:100%;}
+  html,body{margin:0;padding:0;overflow-x:hidden;}
   body{
     background:var(--paper);
     color:var(--ink);
@@ -171,13 +168,8 @@
   .hero-visual{
     aspect-ratio:4/3;
     clip-path: polygon(6% 0, 100% 0, 100% 88%, 94% 100%, 0 100%, 0 12%);
-    overflow:hidden;   /* add this — clips the img to the shape */
+    overflow:hidden;
     position:relative;
-  }
-  .hero-visual::after{
-    content:"studio photo — placeholder";
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    background:rgba(21,20,15,0.55); color:var(--paper); font-size:13px; font-weight:600; text-align:center; padding:20px;
   }
   .hero-visual img{
     width:100%; height:100%;
@@ -237,7 +229,19 @@
   }
   .class-card h3{font-size:22px; text-transform:uppercase;}
   .class-card p{font-size:14px; color:var(--charcoal); margin-top:8px;}
-  .schedule-mount{ margin-top:30px; min-height:200px; }
+  .schedule-embed{
+    margin-top:30px;
+    border:2px dashed var(--line);
+    border-radius:var(--radius-hex);
+    padding:44px 22px;
+    text-align:center;
+  }
+  .schedule-embed .tag{
+    display:inline-block; background:var(--honey); color:var(--ink);
+    padding:5px 12px; font-weight:700; font-size:12.5px; border-radius:20px; margin-bottom:12px;
+  }
+  .schedule-embed h3{font-size:22px;}
+  .schedule-embed p{color:var(--charcoal); font-size:14.5px; max-width:46ch; margin:10px auto 0;}
 
   /* ---------- app highlight ---------- */
   .app-section{background:var(--paper-2);}
@@ -347,31 +351,9 @@
     background:var(--ink); color:var(--honey); padding:10px 18px;
     font-weight:700; font-size:13.5px; border-radius:var(--radius-hex);
   }
-
-  /* ---------- scroll to top ---------- */
-  #toTop{
-    position:fixed;
-    right:16px;
-    bottom:calc(76px + env(safe-area-inset-bottom, 0px));
-    width:46px; height:46px;
-    background:var(--ink);
-    border:none;
-    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-    opacity:0; visibility:hidden; transform:translateY(10px);
-    transition:opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-    z-index:70;
-  }
-  #toTop.show{opacity:1; visibility:visible; transform:translateY(0);}
-  #toTop svg{width:18px; height:18px;}
-  @media(min-width:860px){
-    #toTop{bottom:calc(24px + env(safe-area-inset-bottom, 0px));}
-  }
 </style>
 </head>
 <body>
-<div id="page">
 
 <header>
   <div class="navbar">
@@ -389,6 +371,7 @@
       <a href="#contact">Contact</a>
     </nav>
     <div style="display:flex; align-items:center;">
+      <a href="#" class="account-link" title="Placeholder — likely a Notion form embed">Log in / Sign up</a>
       <a href="#" class="nav-cta">Book a class</a>
       <button class="burger" id="burgerBtn" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -425,7 +408,9 @@
         <div class="stat"><div class="num">1</div><div class="lab">hive, many bees</div></div>
       </div>
     </div>
-    <div class="hero-visual"></div>
+    <div class="hero-visual">
+      <img src="assets/studio.webp" alt="The Munich Collective studio" loading="lazy" width="1200" height="900">
+    </div>
   </div>
 </section>
 
@@ -476,36 +461,13 @@
     </div>
     <div class="class-grid">
       <div class="class-card"><h3>Mat Pilates</h3><p>Full-body, low-impact strength work. All levels welcome.</p></div>
-      <div class="class-card"><h3>Reformer</h3><p>Machine-based Pilates for control, stability and tone.</p></div>
+      <div class="class-card"><h3>Strength & HIIT</h3><p>Strength workouts  for control, stability and tone.</p></div>
       <div class="class-card"><h3>Barre</h3><p>Fifty minutes of small, precise, burn-it-out movements.</p></div>
     </div>
-    <div class="schedule-mount">
-      <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { !typeof window.BsportWidget !== "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
-      <script id="bsport-widget-mount">
-        function MountBsportWidget(config, repeat=1) {
-          if (repeat > 50) { return }
-          if (!window.BsportWidget) {
-            return setTimeout(() => { MountBsportWidget(config, repeat+1) }, 100 * repeat || 1)
-          }
-          BsportWidget.mount(config)
-        }
-      </script>
-      <script>
-        MountBsportWidget({
-          "parentElement": "bsport-widget-87044",
-          "companyId": 2110,
-          "franchiseId": null,
-          "dialogMode": 1,
-          "widgetType": "calendar",
-          "showFab": false,
-          "fullScreenPopup": false,
-          "styles": undefined,
-          "config": {
-            "calendar": { "todayOnly": false, "compactMode": true, "variant": "time" }
-          }
-        })
-      </script>
-      <div id="bsport-widget-87044"></div>
+    <div class="schedule-embed">
+      <div class="tag">bsport widget — placeholder</div>
+      <h3>Live schedule loads here</h3>
+      <p>This block will hold the embedded bsport calendar once the studio shares their widget code — live availability, direct booking, no separate app needed.</p>
     </div>
   </div>
 </section>
@@ -598,9 +560,6 @@
         <p>A short note on new classes and new faces this quarter.</p>
       </div>
     </div>
-    <div class="news-admin-note">
-      Placeholder for now. Once live, Melissa should be able to add, edit or remove a news post herself — see the note on content management below the fold of this proposal.
-    </div>
   </div>
 </section>
 
@@ -638,14 +597,6 @@
   <a href="#">Book a class</a>
 </div>
 
-<button id="toTop" aria-label="Scroll to top">
-  <svg viewBox="0 0 24 24" fill="none" stroke="#f3b400" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 19V5M5 12l7-7 7 7"/>
-  </svg>
-</button>
-
-</div><!-- #page -->
-
 <script>
   const burger = document.getElementById('burgerBtn');
   const menu = document.getElementById('mobile-menu');
@@ -654,12 +605,6 @@
     a.addEventListener('click', ()=> menu.classList.remove('open'));
   });
   document.documentElement.style.scrollBehavior = 'smooth';
-
-  const toTop = document.getElementById('toTop');
-  window.addEventListener('scroll', () => {
-    toTop.classList.toggle('show', window.scrollY > 500);
-  });
-  toTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
 </script>
 
 </body>
