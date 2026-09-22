@@ -229,13 +229,7 @@
   }
   .class-card h3{font-size:22px; text-transform:uppercase;}
   .class-card p{font-size:14px; color:var(--charcoal); margin-top:8px;}
-  .schedule-embed{
-    margin-top:30px;
-    border:2px dashed var(--line);
-    border-radius:var(--radius-hex);
-    padding:44px 22px;
-    text-align:center;
-  }
+  .schedule-mount{ margin-top:30px; min-height:200px; }
   .schedule-embed .tag{
     display:inline-block; background:var(--honey); color:var(--ink);
     padding:5px 12px; font-weight:700; font-size:12.5px; border-radius:20px; margin-bottom:12px;
@@ -275,16 +269,27 @@
   }
 
   /* ---------- team ---------- */
-  .team-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
-  @media(min-width:640px){.team-grid{grid-template-columns:repeat(4,1fr);}}
-  .team-card .avatar{
-    aspect-ratio:1; background:linear-gradient(160deg,var(--paper-2),var(--line));
-    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
-    display:flex; align-items:center; justify-content:center;
-    font-size:11px; color:var(--charcoal); font-weight:600; text-align:center;
+  .team-spotlight{
+    display:flex; align-items:center; justify-content:center; gap:18px;
+    max-width:420px; margin:0 auto;
   }
-  .team-card h3{font-size:17px; margin-top:12px; text-transform:none;}
-  .team-card p{font-size:13px; color:var(--charcoal); margin-top:2px;}
+  .spot-card{ text-align:center; flex:1; }
+  .spot-avatar{
+    width:180px; height:180px; margin:0 auto;
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+    overflow:hidden; background:var(--paper-2);
+  }
+  .spot-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .spot-arrow{
+    background:none; border:none; font-size:32px; line-height:1;
+    color:var(--ink); cursor:pointer; padding:8px; flex:none;
+  }
+  .spot-dots{ display:flex; justify-content:center; gap:8px; margin-top:22px; }
+  .spot-dots button{
+    width:8px; height:8px; border-radius:50%; border:none; padding:0;
+    background:var(--line); cursor:pointer;
+  }
+  .spot-dots button.active{ background:var(--honey-deep); }
 
   /* ---------- pricing ---------- */
   .price-table{border-top:1px solid var(--line);}
@@ -464,10 +469,33 @@
       <div class="class-card"><h3>Strength & HIIT</h3><p>Strength workouts  for control, stability and tone.</p></div>
       <div class="class-card"><h3>Barre</h3><p>Fifty minutes of small, precise, burn-it-out movements.</p></div>
     </div>
-    <div class="schedule-embed">
-      <div class="tag">bsport widget — placeholder</div>
-      <h3>Live schedule loads here</h3>
-      <p>This block will hold the embedded bsport calendar once the studio shares their widget code — live availability, direct booking, no separate app needed.</p>
+    <div class="schedule-mount">
+      <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { !typeof window.BsportWidget !== "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+      <script id="bsport-widget-mount">
+        function MountBsportWidget(config, repeat=1) {
+          if (repeat > 50) { return }
+          if (!window.BsportWidget) {
+            return setTimeout(() => { MountBsportWidget(config, repeat+1) }, 100 * repeat || 1)
+          }
+          BsportWidget.mount(config)
+        }
+      </script>
+      <script>
+        MountBsportWidget({
+          "parentElement": "bsport-widget-87044",
+          "companyId": 2110,
+          "franchiseId": null,
+          "dialogMode": 1,
+          "widgetType": "calendar",
+          "showFab": false,
+          "fullScreenPopup": false,
+          "styles": undefined,
+          "config": {
+            "calendar": { "todayOnly": false, "compactMode": true, "variant": "time" }
+          }
+        })
+      </script>
+      <div id="bsport-widget-87044"></div>
     </div>
   </div>
 </section>
@@ -500,12 +528,26 @@
       <h2>Meet the collective</h2>
       <p>The instructors behind the classes.</p>
     </div>
-    <div class="team-grid">
-      <div class="team-card"><div class="avatar">photo</div><h3>Melissa</h3><p>Founder & instructor</p></div>
-      <div class="team-card"><div class="avatar">photo</div><h3>Instructor name</h3><p>Pilates & barre</p></div>
-      <div class="team-card"><div class="avatar">photo</div><h3>Instructor name</h3><p>Reformer</p></div>
-      <div class="team-card"><div class="avatar">photo</div><h3>Instructor name</h3><p>Barre</p></div>
-    </div>
+    <section class="section" id="team">
+      <div class="wrap">
+        <div class="head">
+          <h2>Meet the collective</h2>
+          <p>The instructors behind the classes.</p>
+        </div>
+        <div class="team-spotlight">
+          <button class="spot-arrow left" aria-label="Previous instructor">‹</button>
+          <div class="spot-card">
+            <div class="spot-avatar"><img id="spotImg" src="" alt=""></div>
+            <h3 id="spotName" style="font-size:22px; text-transform:none;"></h3>
+            <p id="spotRole" style="font-size:14px; color:var(--honey-deep); font-weight:700; margin-top:2px;"></p>
+            <p id="spotBlurb" style="font-size:14.5px; color:var(--charcoal); max-width:40ch; margin:12px auto 0; white-space:pre-line;"></p>
+            <a id="spotSocial" href="#" target="_blank" rel="noopener" style="display:inline-block; margin-top:14px; font-weight:700; font-size:14px; border-bottom:2px solid var(--honey);">Instagram</a>
+          </div>
+          <button class="spot-arrow right" aria-label="Next instructor">›</button>
+        </div>
+        <div class="spot-dots" id="spotDots"></div>
+      </div>
+    </section>
   </div>
 </section>
 
@@ -598,6 +640,7 @@
 </div>
 
 <script>
+  // ---------- mobile menu toggle ----------
   const burger = document.getElementById('burgerBtn');
   const menu = document.getElementById('mobile-menu');
   burger.addEventListener('click', () => menu.classList.toggle('open'));
@@ -605,6 +648,66 @@
     a.addEventListener('click', ()=> menu.classList.remove('open'));
   });
   document.documentElement.style.scrollBehavior = 'smooth';
+</script>
+
+<script>
+  const instructors = [
+    { 
+      name:"Melissa", 
+      role:"Founder & instructor", 
+      blurb:`My classes are thoughtfully planned out and attention to the client is always a priority.  I take the time to track which moves were done in each class and which classes the client has taken to ensure variety but also to further the client in the practice. 
+      My goal is to share my love of fitness through my classes and have a good time while achieving a really good workout.  
+      I'm a registered nurse with many years of experience in Intensive Care, Emergency Room, and Vascular Access until opening up my studio in 2018.  Besides my medical knowledge and background I have certificates of training in Yoga (vinyasa, Kids, Yin, HIIT), Barre levels I&II (including pre/post natal)
+
+      500 RYT
+      YIN 50hr
+      Kids Yoga 23hr
+      Yoga HIIT 40hr`,
+      img:"assets/melissa.webp", social:"https://www.instagram.com/the_munich_collective/" },
+    { 
+      name:"Anita", 
+      role:"Pilates & barre", 
+      blurb:`Pilates became part of my life in 2015, following the birth of my first child. Having practiced yoga for many years, I understood the value of mindful movement, but it was through postpartum recovery that I truly recognized the power of core strength, mobility, and intentional release. 
+      That journey drew me to the fundamental movements of Joseph Pilates, which continue to shape my teaching today.`, 
+      img:"assets/anita.webp", 
+      social:"https://www.instagram.com/pilates_with_anita" },
+    // add more here
+  ];
+
+  let spotIndex = 0;
+  const spotImg = document.getElementById('spotImg');
+  const spotName = document.getElementById('spotName');
+  const spotRole = document.getElementById('spotRole');
+  const spotBlurb = document.getElementById('spotBlurb');
+  const spotSocial = document.getElementById('spotSocial');
+  const spotDots = document.getElementById('spotDots');
+
+  function renderSpotlight(i){
+    const p = instructors[i];
+    spotImg.src = p.img; spotImg.alt = p.name;
+    spotName.textContent = p.name;
+    spotRole.textContent = p.role;
+    spotBlurb.textContent = p.blurb;
+    spotSocial.href = p.social;
+    [...spotDots.children].forEach((d,idx)=>d.classList.toggle('active', idx===i));
+  }
+
+  instructors.forEach((_,i)=>{
+    const dot = document.createElement('button');
+    dot.addEventListener('click', ()=>{ spotIndex=i; renderSpotlight(i); });
+    spotDots.appendChild(dot);
+  });
+
+  document.querySelector('.spot-arrow.left').addEventListener('click', ()=>{
+    spotIndex = (spotIndex - 1 + instructors.length) % instructors.length;
+    renderSpotlight(spotIndex);
+  });
+  document.querySelector('.spot-arrow.right').addEventListener('click', ()=>{
+    spotIndex = (spotIndex + 1) % instructors.length;
+    renderSpotlight(spotIndex);
+  });
+
+  renderSpotlight(0);  
 </script>
 
 </body>
