@@ -206,6 +206,7 @@
     padding:26px 22px;
     border-radius:var(--radius-hex);
   }
+  .review-arrow{ color:var(--paper); }
   @media(min-width:860px){.review-card{flex:0 0 32%;}}
   .review-card q{font-size:15px; color:var(--paper); display:block; margin-bottom:14px;}
   .review-who{font-size:13px; font-weight:700; color:var(--honey);}
@@ -250,8 +251,12 @@
   .phone:nth-child(2){margin-top:-24px; width:150px; height:310px;}
   .phone-screen{
     width:100%; height:100%; border-radius:18px;
-    background:repeating-linear-gradient(0deg, var(--honey) 0 6px, var(--paper) 6px 12px);
-    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .phone-screen img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
   }
   .phone-screen span{
     background:rgba(21,20,15,0.7); color:var(--paper);
@@ -269,29 +274,36 @@
   }
 
   /* ---------- team ---------- */
-  .team-spotlight{
-    display:flex; align-items:center; justify-content:center; gap:18px;
-    max-width:420px; margin:0 auto;
+  .team-row{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+  @media(min-width:640px){.team-row{grid-template-columns:repeat(4,1fr);}}
+  .team-slot{
+    cursor:pointer; text-align:center;
+    background:none; border:none; padding:0; font:inherit; color:inherit;
   }
-  .spot-card{ text-align:center; flex:1; }
-  .spot-avatar{
-    width:180px; height:180px; margin:0 auto;
+  .team-slot .avatar{
+    aspect-ratio:1;
     clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
     overflow:hidden; background:var(--paper-2);
   }
-  .spot-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .spot-arrow{
-    background:none; border:none; font-size:32px; line-height:1;
-    color:var(--ink); cursor:pointer; padding:8px; flex:none;
-  }
-  .spot-dots{ display:flex; justify-content:center; gap:8px; margin-top:22px; }
-  .spot-dots button{
-    width:8px; height:8px; border-radius:50%; border:none; padding:0;
-    background:var(--line); cursor:pointer;
-  }
-  .spot-dots button.active{ background:var(--honey-deep); }
+  .team-slot .avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  .team-slot h3{font-size:17px; margin-top:12px; text-transform:none; font-weight:800;}
+  .team-slot p{font-size:13px; color:var(--charcoal); margin-top:2px;}
 
-  /* ---------- pricing ---------- */
+  .team-nav{display:flex; justify-content:center; gap:20px; margin-top:8px;}
+  .spot-arrow{background:none; border:none; font-size:32px; line-height:1; color:var(--ink); cursor:pointer; padding:8px;}
+
+  .team-detail{margin-top:34px; padding-top:34px; border-top:1px solid var(--line); text-align:center;}
+  .team-detail .avatar{
+    width:120px; height:120px; margin:0 auto;
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+    overflow:hidden; background:var(--paper-2);
+  }
+  .team-detail .avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  .team-detail-close{
+    display:block; margin:0 auto 16px; background:none; border:none; font-size:13px;
+    color:var(--charcoal); cursor:pointer; text-decoration:underline;
+  }
+    /* ---------- pricing ---------- */
   .price-table{border-top:1px solid var(--line);}
   .price-row{
     display:flex; justify-content:space-between; gap:16px;
@@ -306,12 +318,33 @@
   }
   @media(min-width:860px){.rent-block{flex-direction:row; align-items:flex-start;}}
   .rent-gallery{display:flex; gap:8px; flex:1;}
-  .rent-gallery div{
-    flex:1; aspect-ratio:3/4; background:var(--paper-2); border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center; font-size:10.5px; color:var(--charcoal); text-align:center; padding:6px;
+  .rent-gallery button.rent-photo{
+    flex:1; aspect-ratio:3/4;
+    background:var(--paper-2); border:1px solid var(--line);
+    padding:0; cursor:pointer; overflow:hidden;
+  }
+  .rent-gallery button.rent-photo img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+
+  /* ---------- lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(21,20,15,0.9);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .lightbox[hidden]{display:none;}
+  .lightbox img{
+    max-width:100%; max-height:100%;
+    object-fit:contain;
+  }
+  .lightbox-close{
+    position:absolute; top:16px; right:20px;
+    background:none; border:none; color:var(--paper);
+    font-size:28px; cursor:pointer; line-height:1;
   }
   .rent-copy{flex:1;}
-
   /* ---------- news ---------- */
   .news-list{display:flex; flex-direction:column; gap:0;}
   .news-item{
@@ -425,39 +458,57 @@
   <div class="wrap">
     <div class="head">
       <h2>What the hive is saying</h2>
-      <p>Real words from real members. Swap in Google / Classpass reviews here once we've pulled the latest batch.</p>
     </div>
     <div class="review-scroll">
       <div class="review-card">
         <div class="stars">★★★★★</div>
-        <q>Best studio in Munich — the instructors actually remember your name and your bad knee.</q>
-        <div class="review-who">— placeholder review</div>
+        <q>Love love love Melissa‘s Class Friday 12 p.m. My personal best way to reward myself for the week and start the weekend 🥳 never disappoints me! Thank you!</q>
+        <div class="review-who">Daniela Wefelscheid (<a href="https://www.google.com/maps/contrib/104895861020209216647/reviews/@48.1669843,11.5718626,14z/data=!4m3!8m2!3m1!1e1?hl=en-GB&entry=ttu&g_ep=EgoyMDI2MDkxNi4wIKXMDSoASAFQAw==" target="_blank" rel="noopener">Google review</a>)</div>
+      </div>    
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>I was in Anita's "Pilates Strong" class today & I thought it was one of the best Pilates classes I've attended in Munich so far! (…and I’ve been to a lot:) She has put a great focus on arms, which - in my opinion - usually comes short in Pilates, & she concentrated on individual muscle groups for a long time, so that you could really feel the burn! I can highly recommend the studio & will come back</q>
+        <div class="review-who">Charlotte Schleicher (<a href="https://www.google.com/maps/contrib/101366227592854673726/reviews?hl=en-GB" target="_blank" rel="noopener">Google review</a>)</div>
       </div>
       <div class="review-card">
         <div class="stars">★★★★★</div>
-        <q>Small classes, real attention. I've tried every studio in the city and keep coming back here.</q>
-        <div class="review-who">— placeholder review</div>
+        <q>Pilates Matwork - Anita Walter<br><br> Amazing class. It doesn’t require a lot of probs to be a spicy Pilates class. Loved the flow and focus on „real“ Pilates exercises</q>
+        <div class="review-who">Classpass</div>
       </div>
       <div class="review-card">
         <div class="stars">★★★★★</div>
-        <q>Booking through the app takes ten seconds. Wish every studio made it this easy.</q>
-        <div class="review-who">— placeholder review</div>
+        <q>Barre Class - Melissa Ryzek<br><br>Love the energy Melissa brought to the room!</q>
+        <div class="review-who">Classpass</div>
+      </div>       
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>Yin Yoga - Melissa Ryzek<br><br>Melissa is a really great instructor and super helpful. I felt very welcome and supported in the class :)</q>
+        <div class="review-who">Classpass</div>
+      </div>        
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>Katharina's Dynamic Core Pilates class was absolutely amazing! The workout is incredibly dynamic and challenges the entire body from start to finish. Katharina brings so much energy and motivation to every session that she inspires you to push beyond what you think you're capable of. By the end of the class, you feel stronger, accomplished, and proud of yourself. Katharina's enthusiasm is contagious, and she creates a positive atmosphere that encourages everyone to give their best. I highly recommend this class to anyonelooking for an energizing and eﬀective full-body Pilates workout!</q>
+        <div class="review-who">Hélèna Rosé (<a href="https://www.google.com/maps/contrib/104268035523327242089/reviews?hl=en-GB" target="_blank" rel="noopener">Google review</a>)</div>
       </div>
-    </div>
-    <div class="aggregators">
-      <div class="lab">Book us directly, or through</div>
-      <div class="agg-badges">
-        <span>Urban Sports Club</span>
-        <span>Egym / Wellpass</span>
-        <span>Wellhub</span>
-        <span>Classpass</span>
-      </div>
-    </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>Barre Class - Melissa Ryzek<br><br>Love the energy Melissa brought to the room</q>
+        <div class="review-who">Classpass</div>
+      </div>            
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <q>Barre Class - Melissa Ryzek<br><br>Awwww 💕 ! What a great class! I absolutely loved Melissa’s energy and her clear instructions - as well as her very creative class structure! Definitely going back there! Thx Melissa ✨</q>
+        <div class="review-who">Classpass</div>
+      </div>    
+    </div>    
+    <div class="team-nav" style="margin-top:20px;">
+      <button class="spot-arrow review-arrow left" id="reviewPrev" aria-label="Previous reviews">‹</button>
+      <button class="spot-arrow review-arrow right" id="reviewNext" aria-label="Next reviews">›</button>
+    </div>  
   </div>
 </section>
 
 <div class="comb flip dark"></div>
-
 <section class="section" id="classes">
   <div class="wrap">
     <div class="head">
@@ -466,36 +517,69 @@
     </div>
     <div class="class-grid">
       <div class="class-card"><h3>Mat Pilates</h3><p>Full-body, low-impact strength work. All levels welcome.</p></div>
-      <div class="class-card"><h3>Strength & HIIT</h3><p>Strength workouts  for control, stability and tone.</p></div>
+      <div class="class-card"><h3>Strength & HIIT</h3><p>Strength workouts for control, stability and tone.</p></div>
       <div class="class-card"><h3>Barre</h3><p>Fifty minutes of small, precise, burn-it-out movements.</p></div>
     </div>
-    <div class="schedule-mount">
-      <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { !typeof window.BsportWidget !== "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
-      <script id="bsport-widget-mount">
-        function MountBsportWidget(config, repeat=1) {
-          if (repeat > 50) { return }
-          if (!window.BsportWidget) {
-            return setTimeout(() => { MountBsportWidget(config, repeat+1) }, 100 * repeat || 1)
+    <div class="schedule-mount" id="scheduleMount">
+      <div class="schedule-mount">
+        <script id="insert-bsport-widget-cdn">!function (b, s, p, o, r, t) { !typeof window.BsportWidget !== "undefined" && !document.getElementById("bsport-widget-cdn") && !function () { m = b.createElement(s), m.id = "bsport-widget-cdn", m.src = p, b.getElementsByTagName("head")[0].appendChild(m) }() }(document, "script", "https://cdn.bsport.io/scripts/widget.js")</script>
+        <script id="bsport-widget-mount">
+          function MountBsportWidget(config, repeat=1) {
+            if (repeat > 50) { return }
+            if (!window.BsportWidget) {
+              return setTimeout(() => { MountBsportWidget(config, repeat+1) }, 100 * repeat || 1)
+            }
+            BsportWidget.mount(config)
           }
-          BsportWidget.mount(config)
-        }
-      </script>
-      <script>
-        MountBsportWidget({
-          "parentElement": "bsport-widget-87044",
-          "companyId": 2110,
-          "franchiseId": null,
-          "dialogMode": 1,
-          "widgetType": "calendar",
-          "showFab": false,
-          "fullScreenPopup": false,
-          "styles": undefined,
-          "config": {
-            "calendar": { "todayOnly": false, "compactMode": true, "variant": "time" }
-          }
-        })
-      </script>
-      <div id="bsport-widget-87044"></div>
+        </script>
+        <script>
+          MountBsportWidget({
+            "parentElement": "bsport-widget-87044",
+            "companyId": 2110,
+            "franchiseId": null,
+            "dialogMode": 1,
+            "widgetType": "calendar",
+            "showFab": false,
+            "fullScreenPopup": false,
+            "styles": undefined,
+            "config": {
+              "calendar": { "todayOnly": false, "compactMode": true, "variant": "time" }
+            }
+          })
+        </script>
+        <div id="bsport-widget-87044"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="comb flip dark"></div>
+<section class="section" id="team">
+  <div class="wrap">
+    <div class="head">
+      <h2>Meet the collective</h2>
+      <p>The instructors behind the classes. Tap anyone for their story.</p>
+    </div>
+
+    <div class="team-row" id="teamRow">
+      <button class="team-slot" data-slot="0"><div class="avatar"><img alt=""></div><h3></h3><p></p></button>
+      <button class="team-slot" data-slot="1"><div class="avatar"><img alt=""></div><h3></h3><p></p></button>
+      <button class="team-slot" data-slot="2"><div class="avatar"><img alt=""></div><h3></h3><p></p></button>
+      <button class="team-slot" data-slot="3"><div class="avatar"><img alt=""></div><h3></h3><p></p></button>
+    </div>
+
+    <div class="team-nav">
+      <button class="spot-arrow left" id="teamPrev" aria-label="Previous instructors">‹</button>
+      <button class="spot-arrow right" id="teamNext" aria-label="Next instructors">›</button>
+    </div>
+
+    <div class="team-detail" id="teamDetail" hidden>
+      <button class="team-detail-close" id="teamDetailClose">Close ✕</button>
+      <div class="avatar"><img id="detailImg" alt=""></div>
+      <h3 id="detailName" style="font-size:22px; text-transform:none; margin-top:14px;"></h3>
+      <p id="detailRole" style="font-size:14px; color:var(--honey-deep); font-weight:700; margin-top:2px;"></p>
+      <p id="detailBlurb" style="font-size:14.5px; color:var(--charcoal); max-width:48ch; margin:14px auto 0; white-space:pre-line; text-align:left;"></p>
+      <a id="detailSocial" href="#" target="_blank" rel="noopener" style="display:inline-block; margin-top:14px; font-weight:700; font-size:14px; border-bottom:2px solid var(--honey);">Instagram</a>
     </div>
   </div>
 </section>
@@ -503,8 +587,8 @@
 <section class="app-section section" id="app">
   <div class="wrap app-flex">
     <div class="phones">
-      <div class="phone"><div class="phone-screen"><span>app<br>screenshot</span></div></div>
-      <div class="phone"><div class="phone-screen"><span>app<br>screenshot</span></div></div>
+    <div class="phone"><div class="phone-screen"><img src="assets/app_1.webp" alt="Booking a class in the app"></div></div>
+    <div class="phone"><div class="phone-screen"><img src="assets/app_2.webp" alt="Viewing the class schedule in the app"></div></div>
     </div>
     <div class="app-copy">
       <div class="head" style="margin-bottom:0;">
@@ -520,36 +604,7 @@
   </div>
 </section>
 
-<div class="comb"></div>
 
-<section class="section" id="team">
-  <div class="wrap">
-    <div class="head">
-      <h2>Meet the collective</h2>
-      <p>The instructors behind the classes.</p>
-    </div>
-    <section class="section" id="team">
-      <div class="wrap">
-        <div class="head">
-          <h2>Meet the collective</h2>
-          <p>The instructors behind the classes.</p>
-        </div>
-        <div class="team-spotlight">
-          <button class="spot-arrow left" aria-label="Previous instructor">‹</button>
-          <div class="spot-card">
-            <div class="spot-avatar"><img id="spotImg" src="" alt=""></div>
-            <h3 id="spotName" style="font-size:22px; text-transform:none;"></h3>
-            <p id="spotRole" style="font-size:14px; color:var(--honey-deep); font-weight:700; margin-top:2px;"></p>
-            <p id="spotBlurb" style="font-size:14.5px; color:var(--charcoal); max-width:40ch; margin:12px auto 0; white-space:pre-line;"></p>
-            <a id="spotSocial" href="#" target="_blank" rel="noopener" style="display:inline-block; margin-top:14px; font-weight:700; font-size:14px; border-bottom:2px solid var(--honey);">Instagram</a>
-          </div>
-          <button class="spot-arrow right" aria-label="Next instructor">›</button>
-        </div>
-        <div class="spot-dots" id="spotDots"></div>
-      </div>
-    </section>
-  </div>
-</section>
 
 <section class="section" id="pricing" style="background:var(--paper-2);">
   <div class="wrap">
@@ -571,9 +626,17 @@
 
     <div class="rent-block" id="rent">
       <div class="rent-gallery">
-        <div>studio photo</div>
-        <div>studio photo</div>
-        <div>studio photo</div>
+        <div class="rent-gallery">
+          <button class="rent-photo" data-full="assets/studio1.webp">
+            <img src="assets/studio1.webp" alt="The Munich Collective studio space" loading="lazy">
+          </button>
+          <button class="rent-photo" data-full="assets/studio2.webp">
+            <img src="assets/studio2.webp" alt="The Munich Collective studio space" loading="lazy">
+          </button>
+          <button class="rent-photo" data-full="assets/studio3.webp">
+            <img src="assets/studio3.webp" alt="The Munich Collective studio space" loading="lazy">
+          </button>
+        </div>
       </div>
       <div class="rent-copy">
         <h3 style="font-size:26px; text-transform:uppercase;">Rent the studio</h3>
@@ -588,18 +651,17 @@
   <div class="wrap">
     <div class="head">
       <h2>News</h2>
-      <p>Studio updates — not the front page anymore, but easy to find.</p>
     </div>
     <div class="news-list">
       <div class="news-item">
-        <div class="date">Placeholder date</div>
-        <h3>Closing for renovations</h3>
-        <p>We're closing for a short renovation window, resuming classes right after. Details go here.</p>
-      </div>
-      <div class="news-item">
-        <div class="date">Placeholder date</div>
-        <h3>New instructors joining the collective</h3>
-        <p>A short note on new classes and new faces this quarter.</p>
+        <div class="date">September 24, 2026</div>
+        <h3>The Fall schedule is up!</h3>
+        <p>I’m super excited to announce a couple new classes on the schedule. <br><br>Anita will now be offering a <b>SCULPT & STRENGTH WITH BABY</b> with you and your baby on Mondays. Moms and Dads are both welcome! The class is accessible with aggregators and also has a First time, Single Class and a 4xCard option. Come and check it out and share with anyone that you think would be interested.<br><br>
+I’ll be offering a double header of <b>YIN</b> yoga on Sundays, one class at 1900 and a second at 2030. Also, get your YIN during the week, perfectly placed mid-week on Wednesdays at 2030. This is an amazing way to slow down, stretch and take a moment away from the hustle bustle that life brings.<br><br>
+Feli is offering a new <b>SCULPT</b> class on Fridays at 1730 to get your Sculpting needs in before the weekend plans begin!<br><br>
+I will also finally be offering a second evening of <b>BARRE WITH MELISSA</b> on Fridays at 1830…listed as Pop-ups for now. Come join me for Fridays on the mat and at the barre.
+<br><br>
+Sunday mornings will now offer <b>CORE FUSION</b> with Stefanie at 0900.</p>
       </div>
     </div>
   </div>
@@ -613,7 +675,12 @@
       <h2>Find us</h2>
     </div>
     <div class="contact-flex">
-      <div class="map-box">map embed — placeholder</div>
+      <div class="map-box">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d166.31379937640236!2d11.574091005124687!3d48.16768057046141!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479e7546d643ed87%3A0x72e39f7a5940c272!2sThe%20Munich%20Collective!5e0!3m2!1sen!2sde!4v1790280136861!5m2!1sen!2sde"
+          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
       <div class="contact-info">
         <div class="row"><span>Address</span>Belgradstrasse 66, 80804 München</div>
         <div class="row"><span>Contact</span>Melissa Ryzek — +49 (0)160 9090 9125</div>
@@ -639,6 +706,11 @@
   <a href="#">Book a class</a>
 </div>
 
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <script>
   // ---------- mobile menu toggle ----------
   const burger = document.getElementById('burgerBtn');
@@ -650,65 +722,198 @@
   document.documentElement.style.scrollBehavior = 'smooth';
 </script>
 
+<script> 
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+
+  document.querySelectorAll('.rent-photo').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      lightboxImg.src = btn.dataset.full;
+      lightboxImg.alt = btn.querySelector('img').alt;
+      lightbox.hidden = false;
+    });
+  });
+
+  function closeLightbox(){ lightbox.hidden = true; lightboxImg.src = ''; }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e)=>{ if(e.target === lightbox) closeLightbox(); }); // click backdrop closes
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLightbox(); });  
+</script>
+
+<script>
+    // ---- review scroll logic ----------
+  const reviewScroll = document.getElementById('reviewScroll');
+
+  function scrollReviews(dir){
+    const card = reviewScroll.querySelector('.review-card');
+    const styles = getComputedStyle(reviewScroll);
+    const gap = parseFloat(styles.gap) || 16;
+    const amount = card.getBoundingClientRect().width + gap;
+    reviewScroll.scrollBy({left: dir * amount, behavior:'smooth'});
+  }
+
+  document.getElementById('reviewPrev').addEventListener('click', ()=>scrollReviews(-1));
+  document.getElementById('reviewNext').addEventListener('click', ()=>scrollReviews(1));
+  // ---
+</script>
+
 <script>
   const instructors = [
     { 
       name:"Melissa", 
       role:"Founder & instructor", 
-      blurb:`My classes are thoughtfully planned out and attention to the client is always a priority.  I take the time to track which moves were done in each class and which classes the client has taken to ensure variety but also to further the client in the practice. 
-      My goal is to share my love of fitness through my classes and have a good time while achieving a really good workout.  
-      I'm a registered nurse with many years of experience in Intensive Care, Emergency Room, and Vascular Access until opening up my studio in 2018.  Besides my medical knowledge and background I have certificates of training in Yoga (vinyasa, Kids, Yin, HIIT), Barre levels I&II (including pre/post natal)
+      blurb:`My classes are thoughtfully planned out and attention to the client is always a priority. I take the time to track which moves were done in each class and which classes the client has taken to ensure variety but also to further the client in the practice.
+  My goal is to share my love of fitness through my classes and have a good time while achieving a really good workout.
+  I'm a registered nurse with many years of experience in Intensive Care, Emergency Room, and Vascular Access until opening up my studio in 2018. Besides my medical knowledge and background I have certificates of training in Yoga (vinyasa, Kids, Yin, HIIT), Barre levels I&II (including pre/post natal)
 
-      500 RYT
-      YIN 50hr
-      Kids Yoga 23hr
-      Yoga HIIT 40hr`,
-      img:"assets/melissa.webp", social:"https://www.instagram.com/the_munich_collective/" },
+  500 RYT
+  YIN 50hr
+  Kids Yoga 23hr
+  Yoga HIIT 40hr`,
+      img:"assets/melissa.webp", social:"https://www.instagram.com/the_munich_collective/" 
+    },
     { 
       name:"Anita", 
-      role:"Pilates & barre", 
-      blurb:`Pilates became part of my life in 2015, following the birth of my first child. Having practiced yoga for many years, I understood the value of mindful movement, but it was through postpartum recovery that I truly recognized the power of core strength, mobility, and intentional release. 
-      That journey drew me to the fundamental movements of Joseph Pilates, which continue to shape my teaching today.`, 
-      img:"assets/anita.webp", 
-      social:"https://www.instagram.com/pilates_with_anita" },
-    // add more here
-  ];
+      role:"Instructor", 
+      blurb:`Pilates became part of my life in 2015, following the birth of my first child. Having practiced yoga for many years, I understood the value of mindful movement, but it was through postpartum recovery that I truly recognized the power of core strength, mobility, and intentional release.
+  That journey drew me to the fundamental movements of Joseph Pilates, which continue to shape my teaching today.`,
+      img:"assets/anita.webp",
+      social:"https://www.instagram.com/pilates_with_anita" 
+    },
+    { 
+      name:"Katharina", 
+      role:"Instructor", 
+      blurb:`Seit nunmehr 10 Jahren ist Pilates ein fester Bestandteil meines Lebens. Mein wachsendes Interesse an funktioneller Bewegung und Körperausrichtung führte mich dazu, die international anerkannte Ausbildung zur Pilates-Mattentrainerin bei BASI® Pilates zu absolvieren. In meinen Kursen möchte ich zeigen, dass Pilates alles andere als langweilig ist: Es ist mir wichtig, die klassischen Pilates-Übungen mit Dynamik und Spaß zu vermitteln, ohne dabei das zentrale Element – die Verbindung von Geist und Körper – aus den Augen zu verlieren.
+Meine Ausbildung qualifiziert mich außerdem für den Eintritt in den Deutschen Pilates Verband (DPV), und ich unterrichte Erwachsenengruppen aller Levels.
 
-  let spotIndex = 0;
-  const spotImg = document.getElementById('spotImg');
-  const spotName = document.getElementById('spotName');
-  const spotRole = document.getElementById('spotRole');
-  const spotBlurb = document.getElementById('spotBlurb');
-  const spotSocial = document.getElementById('spotSocial');
-  const spotDots = document.getElementById('spotDots');
+Der Kurs wird auf Deutsch unterrichtet, es kann aber auf Englisch ausgeholfen werden`,
+      img:"assets/katharina.webp",
+      social:"https://www.instagram.com/kath_boeg/" 
+    },
+    { 
+      name:"Felicitas", 
+      role:"Instructor", 
+      blurb:`Ich bin Feli, zertifizierte Pilates Trainerin und in meinen Kursen heißt es: Kopf aus, Körper an. Mit viel Freude an Bewegung gestalte ich meine Kurse aktiv, motivierend und achtsam. Mir ist wichtig, dass wir gemeinsam mit Spaß trainieren und du deine Stunde gestärkt, entspannt und gut gelaunt beendest.`,
+      img:"assets/felicitas.webp",
+      social:"https://www.instagram.com/needleandcore" 
+    },
+    { 
+      name:"Daniela", 
+      role:"Instructor", 
+      blurb:`I’m Daniela Cataño, a yoga and movement teacher dedicated to strength-based, functional, and mindful training. My classes blend elements of Pilates, sculpt, and dynamic movement to create a balanced experience that challenges your body while keeping you connected to your breath and control.
 
-  function renderSpotlight(i){
-    const p = instructors[i];
-    spotImg.src = p.img; spotImg.alt = p.name;
-    spotName.textContent = p.name;
-    spotRole.textContent = p.role;
-    spotBlurb.textContent = p.blurb;
-    spotSocial.href = p.social;
-    [...spotDots.children].forEach((d,idx)=>d.classList.toggle('active', idx===i));
+With a warm and energetic teaching style, I aim to make my classes accessible, motivating, and multi-level so everyone feels both supported and challenged. I also draw on my background in meditation and wellness, subtly integrating these practices to encourage deeper body awareness and a stronger internal connection.`,
+      img:"assets/daniela.webp",
+      social:"https://www.instagram.com/danywellness/" 
+    },
+    { 
+      name:"Prisca", 
+      role:"Instructor", 
+      blurb:`Mit klassischen Ballettstunden aufgewachsen blieb die Freude und
+Motivation für Bewegung und Tanzelemente bis ins Erwachsenenalter. 2020
+baute ich durch die Teilnahme an dem IFAA Fitnesstrainer B-Lizenz Wissen
+in der Trainingslehre und anatomischen und physiologischen Grundstrukturen
+des menschlichen Körpers auf. In 2024 absolvierte ich das Ballet Barre
+Teacher Training (Studio Kale & Cake) und startete mit Barre Kursen, um
+meine Begeisterung für diese Sportart in einem vielfältigen, dynamischen Kursprogramm weiterzugeben. In dem Workshop Barre
+Floorwork (Studio.12) vertiefte ich meine Ausführungstechnik und
+entwickelte neue Trainingssequenzen mit dem effektiven Einsatz von Bällen,
+Loops, Blöcken oder Sliders.`,
+      img:"assets/prisca.webp",
+      social:"#" 
+    },
+    { 
+      name:"Stefanie", 
+      role:"Instructor", 
+      blurb:`Sport ist mein Happy Place: Dabei kann ich alles andere vergessen und mich voll auf das Hier und Jetzt konzentrieren.
+Weil ich auch anderen zeigen wollte, dass Sport Spaß macht, habe ich angefangen, zu unterrichten. Ganz besonders begeistert mich Barre: Denn dieses Training ist einfach eines der besten für einen starken und gesunden Körper.`,
+      img:"assets/stefanie.webp",
+      social:"#" 
+    }, 
+    { 
+      name:"Frances", 
+      role:"Instructor", 
+      blurb:`As a certified Kidding Around Yoga (KAY) teacher, I will be offering fun and engaging kids’ yoga classes for children ages 4-8. Through music, movement, games, and storytelling, KAY helps kids develop mindfulness, strength, and flexibility while promoting relaxation and emotional well-being. Classes are playful and energetic, incorporating songs, yoga poses, breathing exercises, and meditation techniques in a way that keeps young minds and bodies engaged. I hope to make yoga accessible and enjoyable, fostering a love for movement and self-care from an early age.`,
+      img:"assets/frances.webp",
+      social:"#" 
+    },    
+  ]
+
+  // ---- ---------- team rotation logic ----------
+
+  const fixedInstructor = instructors[0];
+  const rotating = instructors.slice(1);
+  let rotateStart = 0;
+
+  const teamSlots = document.querySelectorAll('.team-slot');
+  const teamDetail = document.getElementById('teamDetail');
+
+  function slotData(slotIndex){
+    if(slotIndex === 0) return { data: fixedInstructor, realIndex: 0 };
+    const rIdx = (rotateStart + (slotIndex - 1)) % rotating.length;
+    return { data: rotating[rIdx], realIndex: 1 + rIdx };
   }
 
-  instructors.forEach((_,i)=>{
-    const dot = document.createElement('button');
-    dot.addEventListener('click', ()=>{ spotIndex=i; renderSpotlight(i); });
-    spotDots.appendChild(dot);
+  let teamAutoTimer = null;
+
+function startTeamAutoRotate(){
+  clearInterval(teamAutoTimer);
+  if (rotating.length <= 1) return; // nothing to rotate through
+  teamAutoTimer = setInterval(() => {
+    rotateStart = (rotateStart + 1) % rotating.length;
+    renderTeamRow();
+  }, 4500); // change timing here, in ms
+}
+
+// restart the timer whenever someone manually clicks an arrow,
+// so it doesn't jump again right after their click
+document.getElementById('teamPrev').addEventListener('click', startTeamAutoRotate);
+document.getElementById('teamNext').addEventListener('click', startTeamAutoRotate);
+
+startTeamAutoRotate();
+
+// ---- ---------- team rotation logic ends ----------
+
+
+  function renderTeamRow(){
+    teamSlots.forEach((slot, i)=>{
+      const { data, realIndex } = slotData(i);
+      slot.querySelector('img').src = data.img;
+      slot.querySelector('img').alt = data.name;
+      slot.querySelector('h3').textContent = data.name;
+      slot.querySelector('p').textContent = data.role;
+      slot.dataset.realIndex = realIndex;
+    });
+  }
+
+  function showDetail(realIndex){
+    const p = instructors[realIndex];
+    document.getElementById('detailImg').src = p.img;
+    document.getElementById('detailImg').alt = p.name;
+    document.getElementById('detailName').textContent = p.name;
+    document.getElementById('detailRole').textContent = p.role;
+    document.getElementById('detailBlurb').textContent = p.blurb;
+    document.getElementById('detailSocial').href = p.social;
+    teamDetail.hidden = false;
+    teamDetail.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  teamSlots.forEach(slot=>{
+    slot.addEventListener('click', ()=> showDetail(Number(slot.dataset.realIndex)));
+  });
+  document.getElementById('teamDetailClose').addEventListener('click', ()=>{ teamDetail.hidden = true; });
+
+  document.getElementById('teamPrev').addEventListener('click', ()=>{
+    rotateStart = (rotateStart - 1 + rotating.length) % rotating.length;
+    renderTeamRow();
+  });
+  document.getElementById('teamNext').addEventListener('click', ()=>{
+    rotateStart = (rotateStart + 1) % rotating.length;
+    renderTeamRow();
   });
 
-  document.querySelector('.spot-arrow.left').addEventListener('click', ()=>{
-    spotIndex = (spotIndex - 1 + instructors.length) % instructors.length;
-    renderSpotlight(spotIndex);
-  });
-  document.querySelector('.spot-arrow.right').addEventListener('click', ()=>{
-    spotIndex = (spotIndex + 1) % instructors.length;
-    renderSpotlight(spotIndex);
-  });
-
-  renderSpotlight(0);  
+  renderTeamRow();
 </script>
-
 </body>
 </html>
